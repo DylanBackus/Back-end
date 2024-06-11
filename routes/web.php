@@ -3,7 +3,6 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\GameController;
-use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/profile/{id}', [UserController::class, 'profile'])->name('user.profile');
@@ -22,11 +21,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/save-result/{id}', [GameController::class, 'saveResult'])->name('games.saveResult');
 });
 
-// Uncomment and update these routes if necessary
-Route::get('/', function () {
-    return view('welcome');
+// Voor debugging en testdoeleinden
+Route::get('/test', function () {
+    return 'Hello, world!';
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
