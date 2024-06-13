@@ -3,6 +3,10 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\GameController;
+use Illuminate\Support\Facades\Route;
+
+// Breeze routes
+require __DIR__.'/auth.php';
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/profile/{id}', [UserController::class, 'profile'])->name('user.profile');
@@ -21,7 +25,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/save-result/{id}', [GameController::class, 'saveResult'])->name('games.saveResult');
 });
 
-// Voor debugging en testdoeleinden
-Route::get('/test', function () {
-    return 'Hello, world!';
-});
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+
+// Directe verwijzing naar de spelpagina als hoofdpagina
+Route::get('/', [GameController::class, 'index']);

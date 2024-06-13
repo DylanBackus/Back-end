@@ -1,21 +1,19 @@
 @extends('layouts.app')
 
+@section('header')
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ __('Games') }}
+    </h2>
+@endsection
+
 @section('content')
-<div class="container">
-    <h1>Beschikbare Spellen</h1>
-    <a href="{{ route('games.create') }}" class="btn btn-primary">Nieuw Spel Starten</a>
-    <ul>
-        @foreach($games as $game)
-            <li>
-                Spel ID: {{ $game->id }} - Status: {{ $game->status }}
-                @if($game->status == 'waiting')
-                    <form action="{{ route('games.join', ['id' => $game->id]) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-success">Deelnemen</button>
-                    </form>
-                @endif
-            </li>
-        @endforeach
-    </ul>
-</div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <!-- Je inhoud hier -->
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
