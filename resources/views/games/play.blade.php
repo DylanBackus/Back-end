@@ -1,14 +1,30 @@
+<!-- resources/views/games/play.blade.php -->
 @extends('layouts.app')
 
 @section('content')
-    <h1>Spel spelen</h1>
+    <h1>Speel het woordspel</h1>
     <p>Spel ID: {{ $game->id }}</p>
-    <!-- Voeg hier de spel logica toe -->
-    <form action="{{ route('games.saveResult', $game->id) }}" method="POST">
-        @csrf
-        <input type="hidden" name="winner_id" value="{{ Auth::id() }}">
-        <input type="hidden" name="loser_id" value="{{ $game->player1_id == Auth::id() ? $game->player2_id : $game->player1_id }}">
-        <input type="hidden" name="result" value="gewonnen">
-        <button type="submit" class="btn btn-primary">Resultaat opslaan</button>
-    </form>
+    <p>Status: {{ $game->status }}</p>
+
+    <!-- Voeg hier de game logica en interface toe, zoals bijv. Wordle -->
+    <div id="wordgame">
+        <form id="wordgame-form">
+            <input type="text" id="guess" placeholder="Raad een woord" maxlength="5">
+            <button type="submit">Submit</button>
+        </form>
+        <div id="feedback"></div>
+    </div>
+
+    <script>
+        document.getElementById('wordgame-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const guess = document.getElementById('guess').value;
+            // Simpele feedback logica
+            if (guess === 'apple') {
+                document.getElementById('feedback').textContent = 'Correct!';
+            } else {
+                document.getElementById('feedback').textContent = 'Probeer opnieuw!';
+            }
+        });
+    </script>
 @endsection

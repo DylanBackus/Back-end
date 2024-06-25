@@ -1,35 +1,45 @@
-<?php 
+<?php
+// app/Http/Controllers/GameController.php
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Game;
+use App\Models\Word;
+use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
     public function index()
     {
-        $games = Game::all(); // Hier halen we alle spellen op
-        return view('games.index', compact('games')); // Dit retourneert een view met de spellen
+        $games = Game::all();
+        return view('games.index', compact('games'));
     }
 
     public function create(Request $request)
     {
-        // Logica voor het aanmaken van een nieuw spel
+        Game::create([
+            'player1_id' => auth()->id(),
+            'status' => 'waiting',
+        ]);
+
+        return redirect()->route('games.index');
     }
 
     public function join($id)
     {
-        // Logica voor het joinen van een spel
+        $game = Game::findOrFail($id);
+        $game->update([
+            'player2_id' => auth()->id(),
+            'status' => 'playing',
+        ]);
+
+        return redirect()->route('games.play', $game->id);
     }
 
     public function play($id)
     {
-        // Logica voor het spelen van een spel
-    }
-
-    public function saveResult(Request $request, $id)
-    {
-        // Logica voor het opslaan van het spelresultaat
+        $game = Game::findOrFail($id);
+        $word = Word::inRandomOrder()->first()->word; // Haal een willekeurig woord op
+        return view('games.play', compact('game', 'word'));
     }
 }
