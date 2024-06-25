@@ -27,9 +27,10 @@
 
                     <x-slot name="content">
                         @if (Auth::check())
-                            <x-dropdown-link :href="route('profile.edit')">
+                            <!-- Verwijder of pas de volgende lijn aan -->
+                            <!-- <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
-                            </x-dropdown-link>
+                            </x-dropdown-link> -->
 
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
@@ -84,9 +85,10 @@
 
             <div class="mt-3 space-y-1">
                 @if (Auth::check())
-                    <x-responsive-nav-link :href="route('profile.edit')">
+                    <!-- Verwijder of pas de volgende lijn aan -->
+                    <!-- <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Profile') }}
-                    </x-responsive-nav-link>
+                    </x-responsive-nav-link> -->
 
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">

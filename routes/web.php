@@ -1,32 +1,45 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\FriendController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\FriendController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 
-// Breeze routes
-require __DIR__.'/auth.php';
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/profile/{id}', [UserController::class, 'profile'])->name('user.profile');
-    Route::get('/edit-profile', [UserController::class, 'editProfile'])->name('user.editProfile');
-    Route::post('/edit-profile', [UserController::class, 'updateProfile'])->name('user.updateProfile');
-
-    Route::get('/friends', [FriendController::class, 'index'])->name('friends.index');
-    Route::post('/add-friend', [FriendController::class, 'addFriend'])->name('friends.addFriend');
-    Route::post('/accept-friend/{id}', [FriendController::class, 'acceptFriend'])->name('friends.acceptFriend');
-    Route::post('/reject-friend/{id}', [FriendController::class, 'rejectFriend'])->name('friends.rejectFriend');
-
-    Route::get('/games', [GameController::class, 'index'])->name('games.index');
-    Route::post('/create-game', [GameController::class, 'create'])->name('games.create');
-    Route::post('/join-game/{id}', [GameController::class, 'join'])->name('games.join');
-    Route::get('/play-game/{id}', [GameController::class, 'play'])->name('games.play');
-    Route::post('/save-result/{id}', [GameController::class, 'saveResult'])->name('games.saveResult');
+Route::get('/', function () {
+    return view('welcome');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Authentication Routes
+Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::post('login', [AuthenticatedSessionController::class, 'store']);
+Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
+// Registration Routes
+Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('register', [RegisteredUserController::class, 'store']);
 
-// Directe verwijzing naar de spelpagina als hoofdpagina
-Route::get('/', [GameController::class, 'index']);
+// Game Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/games', [GameController::class, 'index'])->name('games.index');
+    Route::post('/games', [GameController::class, 'create'])->name('games.create');
+    Route::get('/games/join/{id}', [GameController::class, 'join'])->name('games.join');
+    Route::get('/games/play/{id}', [GameController::class, 'play'])->name('games.play');
+    Route::post('/games/{id}/result', [GameController::class, 'saveResult'])->name('games.saveResult');
+});
+
+// Friend Routes
+Route::middleware(['auth'])->group(function () {
+    Route::post('friend/add', [FriendController::class, 'add'])->name('friend.add');
+    Route::post('friend/accept', [FriendController::class, 'accept'])->name('friend.accept');
+    Route::post('friend/decline', [FriendController::class, 'decline'])->name('friend.decline');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
