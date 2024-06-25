@@ -39,7 +39,13 @@ class GameController extends Controller
     public function play($id)
     {
         $game = Game::findOrFail($id);
-        $word = Word::inRandomOrder()->first()->word; // Haal een willekeurig woord op
+        $word = Word::inRandomOrder()->first();
+
+        if (!$word) {
+            return redirect()->route('games.index')->withErrors('Geen woorden beschikbaar. Voeg woorden toe aan de database.');
+        }
+
         return view('games.play', compact('game', 'word'));
     }
 }
+
